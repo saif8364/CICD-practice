@@ -1,0 +1,48 @@
+name: Practice
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  # ----- CI ----- #
+  test:
+    name: Import Checks
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Code Copy to Actions Machine
+        uses: actions/checkout@v4
+
+      - name: Setup Nodejs
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Installing deps
+        run: npm ci
+
+      - name: Import Tests
+        run: npm run test-import
+
+  # ----- CD ----- #
+  deploy:
+    name: Deploying on OCI
+    needs: test
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploying
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            cd /home/ubuntu/ci-cd-practice
+            git pull origin main
+            npm ci
+            pm2 restart ci-cd-practice
