@@ -6,6 +6,6 @@ app.get('/',(req,res)=>{
     res.send('App working')
 })
 
-app.listen(3000,"0.0.0.0",()=>{
+app.listen(3005,"0.0.0.0",()=>{
     console.log('Server is Running')
 })
