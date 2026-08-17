@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test-import": "node ./test/check-import.js"
+    "test-import": "node ./test/check-import.js",
+    "dev":"node index.js"
   },
   "keywords": [],
   "author": "",
